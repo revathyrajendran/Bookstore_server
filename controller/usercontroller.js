@@ -58,3 +58,32 @@ exports.loginController = async(req,res)=>{
     }
 }
 
+//googlelogin
+exports.googleloginController = async(req,res)=>{
+    console.log("Inside Googlelogin Api");
+    //Object destructuring
+    const {email,password,username,profile } = req.body;
+    console.log(email,password,username,profile);
+    try{
+        const excistingUser = await users.findOne({email})
+        if(excistingUser){
+            //token, we have admin and user, so their mail is taken into consideration here ,password not needed because logged in using google.
+                const token = jwt.sign({userMail:excistingUser.email},process.env.JWTSECRET)
+                res.status(200).json({user:excistingUser,token})
+        }else{
+           const newUser = new users({
+            username,email,password,profile
+           }) 
+           //Mongodb saving
+           await newUser.save()
+            //token, we have admin and user, so their mail is taken into consideration here ,
+                const token = jwt.sign({userMail:newUser.email},process.env.JWTSECRET)
+                res.status(200).json({user:newUser,token})
+        }
+
+    }catch(err){
+
+        res.status(500).json(err)
+    }
+}
+
