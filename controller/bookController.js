@@ -35,7 +35,7 @@ exports.addBookController = async(req,res)=>{
 }
 
 //get home books - all looged in users can see , so no middleware here , no need of request here, only books from db must be shown.
-exports.gethomebooks=async(req,res)=>{
+exports.gethomebooksController=async(req,res)=>{
   console.log("Inside gethomebooks Controller");
   try{
     //allbooks is a variable, users store books in the database under books in Bookstore, sort is used to arrange books, _id is unique value in mongo db, -1 to arrange books in descending order, limit is used here because we need only 4 books to be shown in the home page which can b seen as soon as the user loggs in.
@@ -46,4 +46,39 @@ exports.gethomebooks=async(req,res)=>{
     res.status(500).json(err)
   }
   
+}
+
+//get all  books , called by all-products, to see uploaded books for a logged in user, when You click Books from navuigation menu in the header
+exports.getAllbooksController=async(req,res)=>{
+  console.log("Inside getAllbooks Controller");
+  //usermail was assigned to payload key in req object in jwtmiddleware
+    const emailofuser = req.payload
+  try{
+    //allbooks is a variable, users store books in the database under books in Bookstore, sort is used to arrange books, _id is unique value in mongo db, -1 to arrange books in descending order, limit is used here because we need only 4 books to be shown in the home page which can b seen as soon as the user loggs in. And the suer should not see the book he or she has uploaded.
+    //here, in books collection . if userMail field value, is not equal to input mail
+    const allBooks = await books.find({userMail:{$ne:emailofuser}})
+    res.status(200).json(allBooks)
+
+  }catch(err){
+    res.status(500).json(err)
+  }
+  
+}
+
+//View A particular Book
+exports.viewASingleBookController=async(req,res)=>{
+  console.log("Inside viewASingleBookController ");
+  //to get id of a particular project
+   const {id} = req.params 
+   console.log(id);
+   try{
+    //_id is unique in mongo db , findOne() can also be used 
+    const viewBook = await books.findById({_id:id})
+    res.status(200).json(viewBook)
+
+   }
+   catch(err){
+    res.status(500).json(err)
+   }
+   
 }

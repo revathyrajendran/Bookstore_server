@@ -19,4 +19,10 @@ router.post('/add-book',jwtMiddleware,multerConfig.array('uploadImges',3),bookCo
 module.exports = router
 
 //get-home-books : middleware not needed, all users can see
-router.get('/home-books',bookController.gethomebooks)
+router.get('/home-books',bookController.gethomebooksController)
+
+//get-all-books : middleware needed, because only looged in user can access all-products page
+router.get('/all-books',jwtMiddleware,bookController.getAllbooksController)
+
+//view-book : middleware needed, because only looged in user can access single product page
+router.get('/books/:id/view',jwtMiddleware,bookController.viewASingleBookController)
