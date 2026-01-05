@@ -16,12 +16,12 @@ const bookstoreServer=express()
 
 // enable cors protocol in server
 bookstoreServer.use(cors())
-
 //js cannot understand json , so parsing is done
 bookstoreServer.use(express.json())
-
 //server to use router ,place this after cors, then only control returnd from routing.js back to index.js.
 bookstoreServer.use(router)
+//server at 3000 to use uploads folder i the backedn to display images. In thid projects to display images uploaded by a user during selling a book.First  is path of the folder. static is the method to make this available to server
+bookstoreServer.use('/uploads',express.static('./uploads'))
 
 //create port - 3000 or any other value
 const PORT = 3000
