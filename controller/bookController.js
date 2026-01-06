@@ -51,12 +51,20 @@ exports.gethomebooksController=async(req,res)=>{
 //get all  books , called by all-products, to see uploaded books for a logged in user, when You click Books from navuigation menu in the header
 exports.getAllbooksController=async(req,res)=>{
   console.log("Inside getAllbooks Controller");
+  //for search in All products page, we get query parameter which is a key value pair from queries in the request. search is a key defined by us  eg: https://www.google.com/search?q=javascript+basics&rlz=1C1VDKB_enIN927IN927&oq=javascript+basics&gs_lcrp=EgZjaHJvbWUyDwgAEE. search should also be the same in the frontend.
+ const searchKey = req.query.search
   //usermail was assigned to payload key in req object in jwtmiddleware
     const emailofuser = req.payload
+    const query ={
+      //regex is for comparison, options value i means it is case insensitivity
+      title:{$regex : searchKey,$options :'i'},
+      //you can see book if only it was not uploaded by that user, that is why email is used here
+      userMail:{$ne:emailofuser}
+    }
   try{
     //allbooks is a variable, users store books in the database under books in Bookstore, sort is used to arrange books, _id is unique value in mongo db, -1 to arrange books in descending order, limit is used here because we need only 4 books to be shown in the home page which can b seen as soon as the user loggs in. And the suer should not see the book he or she has uploaded.
     //here, in books collection . if userMail field value, is not equal to input mail
-    const allBooks = await books.find({userMail:{$ne:emailofuser}})
+    const allBooks = await books.find(query)
     res.status(200).json(allBooks)
 
   }catch(err){
