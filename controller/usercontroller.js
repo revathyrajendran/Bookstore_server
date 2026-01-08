@@ -87,3 +87,25 @@ exports.googleloginController = async(req,res)=>{
     }
 }
 
+//logged in user profile changing
+exports.loggedinuserprofileditController= async(req,res)=>{
+    console.log("Inside loggedinuserprofileditController ");
+    //text type contents are present in req body, these below keys are same as in usermodel
+    const {username,password,bio,roles,profile}=req.body
+    //payload in jwt middleware
+    const email = req.payload
+    //profile, here file because single picture only. If the user has no profile, it will be present here as a text. If user has profile it will be i the file as filename.
+    const loggedInUserDPupdate = req.file?req.file.filename:profile
+
+    try{
+        //parameter using which the particular data has to be found, then update needed data
+        const updateuser = await users.findOneAndUpdate({email},{username,password,profile:loggedInUserDPupdate,bio,roles},{new:true})
+        updateuser.save()
+        res.status(200).json(updateuser)
+    }catch(err){
+        res.status(500).json(err)
+    }
+
+    
+}
+

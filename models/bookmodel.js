@@ -58,7 +58,7 @@ const bookSchema = new mongoose.Schema({
         type:String,
         required:true
     },
-    //purchase history of logged in
+    //purchase history of logged in user
     bought:{
         type:String,
        default:''

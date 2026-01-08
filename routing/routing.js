@@ -26,3 +26,15 @@ router.get('/all-books',jwtMiddleware,bookController.getAllbooksController)
 
 //view-book : middleware needed, because only looged in user can access single product page
 router.get('/books/:id/view',jwtMiddleware,bookController.viewASingleBookController)
+
+//get all user sold books, Bookstatus
+router.get('/user-books',jwtMiddleware,bookController.getAllUserBooks)
+
+//get all user bought books, Purchase history
+router.get('/user-bought-books',jwtMiddleware,bookController.getAllUserBoughtBooks)
+
+//delete books uploaded by user, from Bookstatus
+router.delete('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserUploadedBook)
+
+//to change profile of a loggedin user,token is needed. multerConfig uses single() method here, beacause it uses only one photo here
+router.put('/user-profile/edit',jwtMiddleware,multerConfig.single('profile'),userController.loggedinuserprofileditController)

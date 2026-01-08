@@ -90,3 +90,45 @@ exports.viewASingleBookController=async(req,res)=>{
    }
    
 }
+
+//get all user books, books uploaded or sold by users by the logged in user , whether they are approved or rejected by the admin or for bookstatus
+exports.getAllUserBooks=async(req,res)=>{
+  console.log("Inside getAllUserBooks");
+  const emailofuser = req.payload
+  try{
+    const alluserbooks = await books.find({userMail:emailofuser})
+      res.status(200).json(alluserbooks)
+  }catch(err){
+    res.status(500).json(err)
+  } 
+}
+
+//get all user bought books, books baought by a user from the website which were uploaded by other user,piurchase history
+exports.getAllUserBoughtBooks=async(req,res)=>{
+  console.log("Inside getAllUserBoughtBooks");
+  const emailofuser = req.payload
+  try{
+    //bought was declared in schema, which was empty initially
+    const alluserboughtbooks = await books.find({bought:emailofuser})
+      res.status(200).json(alluserboughtbooks)
+  }catch(err){
+    res.status(500).json(err)
+  }
+}
+
+//removing the book sold by the user from book status
+exports.deleteUserUploadedBook = async(req,res)=>{
+  console.log("Inside deleteUserUploadedBook");
+  //book id
+  const {id} = req.params
+  console.log(id);
+  try{
+    await books.findByIdAndDelete({_id:id})
+    res.status(200).json("Book Deleted Successfully!!!")
+
+  }catch(err){
+    res.status(500).json(err)
+  }
+  
+  
+}
