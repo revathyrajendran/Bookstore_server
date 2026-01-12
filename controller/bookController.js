@@ -132,3 +132,18 @@ exports.deleteUserUploadedBook = async(req,res)=>{
   
   
 }
+
+//-------admin-----------
+
+//get all books list in resourceadmin page, Here no body and no header bcoz however admin cannot upload books, but in case of users, admin himself is a user, so we should make sure that admin who makes the request is not included in users list 
+exports.getAllBooksListForAdminController = async(req,res)=>{
+  console.log("Inside getAllBooksListForAdminController ");
+  try{
+    const allAdminBooks =  await books.find()
+    res.status(200).json(allAdminBooks)
+
+  }catch(err){
+    res.status(500).json(err)
+  }
+
+}

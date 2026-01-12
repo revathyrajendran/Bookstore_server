@@ -4,6 +4,7 @@ const userController = require('../controller/usercontroller')
 const bookController = require('../controller/bookController')
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerConfig = require('../middlewares/imgMulterMiddleware')
+const adminJwtMiddleware = require('../middlewares/aminJwtMiddleware')
 
 //register
 router.post('/register',userController.registerController)
@@ -38,3 +39,9 @@ router.delete('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserUp
 
 //to change profile of a loggedin user,token is needed. multerConfig uses single() method here, beacause it uses only one photo here
 router.put('/user-profile/edit',jwtMiddleware,multerConfig.single('profile'),userController.loggedinuserprofileditController)
+
+//------------------admin--------------------------------------
+
+// 1) To get all user or user list. But here jwtMiddleware cannot be sued, because not just user or admin, but role has to be checked, so we created adminJwtMiddleware.
+router.get('/all-users',adminJwtMiddleware,userController.getAllusersForAdminController)
+router.get('/all-books-admin',adminJwtMiddleware,bookController.getAllBooksListForAdminController)

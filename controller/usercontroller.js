@@ -42,8 +42,9 @@ exports.loginController = async(req,res)=>{
         const excistingUser = await users.findOne({email})
         if(excistingUser){
             if(excistingUser.password == password){
-                //token, we have admin and user, so their mail is taken into consideration here 
-                const token = jwt.sign({userMail:excistingUser.email},process.env.JWTSECRET)
+                //token, we have admin and user, so their mail is taken into consideration here.role is  used here to identify users and admin separately.Now token will be having mail and role. 
+
+                const token = jwt.sign({userMail:excistingUser.email,roles:excistingUser.roles},process.env.JWTSECRET)
                 res.status(200).json({user:excistingUser,token})
             }else{
                res.status(401).json("Invalid email or password")
@@ -67,8 +68,8 @@ exports.googleloginController = async(req,res)=>{
     try{
         const excistingUser = await users.findOne({email})
         if(excistingUser){
-            //token, we have admin and user, so their mail is taken into consideration here ,password not needed because logged in using google.
-                const token = jwt.sign({userMail:excistingUser.email},process.env.JWTSECRET)
+            //token, we have admin and user, so their mail is taken into consideration here ,password not needed because logged in using google. role is  used here to identify users and admin separately.Now token will be having mail and role. 
+                const token = jwt.sign({userMail:excistingUser.email,role:excistingUser.roles},process.env.JWTSECRET)
                 res.status(200).json({user:excistingUser,token})
         }else{
            const newUser = new users({
@@ -109,3 +110,20 @@ exports.loggedinuserprofileditController= async(req,res)=>{
     
 }
 
+//------admin-----------
+
+//get all uwers for admin , in case of users, admin himself is a user, so we should make sure that admin who makes the request is not included in users list 
+exports.getAllusersForAdminController = async(req,res)=>{
+    console.log("Inside getAllusersForAdminController ");
+    const adminEmail = req.payload
+    try{
+        //email in db
+        const allusers = await users.find({email:{$ne:adminEmail}})
+        res.status(200).json(allusers)
+
+    }catch(err){
+        res.status(500).json(err)
+    }
+
+    
+}
