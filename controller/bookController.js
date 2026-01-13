@@ -147,3 +147,18 @@ exports.getAllBooksListForAdminController = async(req,res)=>{
   }
 
 }
+
+//book status update by admin. Admin opens resouce page, sees all books and users list, books need to be approved by admin, then they apppear for buying in allproducts page of other users apart from admin and uploaded person. Approve
+exports.updateUserBookStatus=async(req,res)=>{
+  console.log("Inside updateUserBookStatus");
+  //we need every single detail about the book as is in schema(excpet _id, it is from db)
+  const {_id,title,author,noOfPages,imageUrl,Price,discountPrice,abstract,publisher,language,isbn,category,uploadImg,status,userMail,bought} = req.body
+  try{
+    const  updateBook =  await books.findByIdAndUpdate({_id},{title,author,noOfPages,imageUrl,Price,discountPrice,abstract,publisher,language,isbn,category,uploadImg,status:"approved",userMail,bought},{new:true})
+    await updateBook.save()
+    res.status(200).json(updateBook)
+  }catch(err){
+    res.status(500).json(err)
+  }
+  
+}

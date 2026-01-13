@@ -45,3 +45,7 @@ router.put('/user-profile/edit',jwtMiddleware,multerConfig.single('profile'),use
 // 1) To get all user or user list. But here jwtMiddleware cannot be sued, because not just user or admin, but role has to be checked, so we created adminJwtMiddleware.
 router.get('/all-users',adminJwtMiddleware,userController.getAllusersForAdminController)
 router.get('/all-books-admin',adminJwtMiddleware,bookController.getAllBooksListForAdminController)
+//admin to approve books
+router.put('/admin/book/approve',adminJwtMiddleware,bookController.updateUserBookStatus)
+//admin profile update,can also edit profile so multer is also used
+router.put('/admin-edit/profile',adminJwtMiddleware,multerConfig.single('profile'),userController.adminProfileEditController)
