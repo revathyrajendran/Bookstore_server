@@ -95,7 +95,7 @@ exports.loggedinuserprofileditController= async(req,res)=>{
     const {username,password,bio,roles,profile}=req.body
     //payload in jwt middleware
     const email = req.payload
-    //profile, here file because single picture only. If the user has no profile, it will be present here as a text. If user has profile it will be i the file as filename.
+    //profile, here file because single picture only. If the user has no profile, it will be present here as a text. If user has profile it will be in the file as filename.
     const loggedInUserDPupdate = req.file?req.file.filename:profile
 
     try{
@@ -105,9 +105,7 @@ exports.loggedinuserprofileditController= async(req,res)=>{
         res.status(200).json(updateuser)
     }catch(err){
         res.status(500).json(err)
-    }
-
-    
+    } 
 }
 
 //------admin-----------

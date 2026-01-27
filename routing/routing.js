@@ -5,6 +5,8 @@ const bookController = require('../controller/bookController')
 const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerConfig = require('../middlewares/imgMulterMiddleware')
 const adminJwtMiddleware = require('../middlewares/aminJwtMiddleware')
+const jobController = require('../controller/jobController')
+
 
 //register
 router.post('/register',userController.registerController)
@@ -17,7 +19,7 @@ router.post('/google-login',userController.googleloginController)
 
 //add book - multerConfig.array('uploadimges',3) , 3 is the max number oif images a user can upload for a book, uploadimges is in the req body.
 router.post('/add-book',jwtMiddleware,multerConfig.array('uploadImges',3),bookController.addBookController)
-module.exports = router
+
 
 //get-home-books : middleware not needed, all users can see
 router.get('/home-books',bookController.gethomebooksController)
@@ -49,3 +51,12 @@ router.get('/all-books-admin',adminJwtMiddleware,bookController.getAllBooksListF
 router.put('/admin/book/approve',adminJwtMiddleware,bookController.updateUserBookStatus)
 //admin profile update,can also edit profile so multer is also used
 router.put('/admin-edit/profile',adminJwtMiddleware,multerConfig.single('profile'),userController.adminProfileEditController)
+//job to be added by admin
+router.post('/admin-add-job',adminJwtMiddleware,jobController.addJobController)
+//to see all jobs uploaded by admin : unauthorized user , can be seen without logging in
+router.get('/all-jobs',jobController.getAllUploadedJobsForAdminController)
+//delete a job bu admin : authorized user
+router.delete('/job/:id/remove',adminJwtMiddleware,jobController.removeJobControllerByAdmin)
+
+
+module.exports = router

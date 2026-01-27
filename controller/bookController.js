@@ -34,7 +34,7 @@ exports.addBookController = async(req,res)=>{
     
 }
 
-//get home books - all looged in users can see , so no middleware here , no need of request here, only books from db must be shown.
+//get home books - all  users can see , so no middleware here , no need of request here, only books from db must be shown.
 exports.gethomebooksController=async(req,res)=>{
   console.log("Inside gethomebooks Controller");
   try{
@@ -48,10 +48,10 @@ exports.gethomebooksController=async(req,res)=>{
   
 }
 
-//get all  books , called by all-products, to see uploaded books for a logged in user, when You click Books from navuigation menu in the header
+//get all  books , called by all-products, to see uploaded books for a logged in user, when You click Books from navuigation menu in the header in home.
 exports.getAllbooksController=async(req,res)=>{
   console.log("Inside getAllbooks Controller");
-  //for search in All products page, we get query parameter which is a key value pair from queries in the request. search is a key defined by us  eg: https://www.google.com/search?q=javascript+basics&rlz=1C1VDKB_enIN927IN927&oq=javascript+basics&gs_lcrp=EgZjaHJvbWUyDwgAEE. search should also be the same in the frontend.
+  //for search in All products page, we get query parameter which is a key value pair from queries in the request. searchKey is a key defined by us  eg: https://www.google.com/search?q=javascript+basics&rlz=1C1VDKB_enIN927IN927&oq=javascript+basics&gs_lcrp=EgZjaHJvbWUyDwgAEE. search should also be the same in the frontend.
  const searchKey = req.query.search
   //usermail was assigned to payload key in req object in jwtmiddleware
     const emailofuser = req.payload
