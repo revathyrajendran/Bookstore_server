@@ -22,6 +22,8 @@ bookstoreServer.use(express.json())
 bookstoreServer.use(router)
 //server at 3000 to use uploads folder i the backedn to display images. In thid projects to display images uploaded by a user during selling a book.First  is path of the folder. static is the method to make this available to server
 bookstoreServer.use('/uploads',express.static('./uploads'))
+//server to make use of pdf folder, which contains resume uploaded by users while applying for a job.
+bookstoreServer.use('/pdf',express.static('./pdf'))
 
 //create port - 3000 or any other value
 const PORT = 3000

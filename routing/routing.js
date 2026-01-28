@@ -6,6 +6,8 @@ const jwtMiddleware = require('../middlewares/jwtMiddleware')
 const multerConfig = require('../middlewares/imgMulterMiddleware')
 const adminJwtMiddleware = require('../middlewares/aminJwtMiddleware')
 const jobController = require('../controller/jobController')
+const pdfmulterConfig = require('../middlewares/pdfMulterMiddleware')
+const applicationController = require('../controller/applicationController')
 
 
 //register
@@ -42,6 +44,9 @@ router.delete('/user-books/:id/remove',jwtMiddleware,bookController.deleteUserUp
 //to change profile of a loggedin user,token is needed. multerConfig uses single() method here, beacause it uses only one photo here
 router.put('/user-profile/edit',jwtMiddleware,multerConfig.single('profile'),userController.loggedinuserprofileditController)
 
+//user applying for a job: add-application, users submit their resume , so pdfmulterConfig. single is the method and resume is field.
+router.post('/user-application/add',jwtMiddleware,pdfmulterConfig.single('resume'),applicationController.addApplicationController)
+
 //------------------admin--------------------------------------
 
 // 1) To get all user or user list. But here jwtMiddleware cannot be sued, because not just user or admin, but role has to be checked, so we created adminJwtMiddleware.
@@ -57,6 +62,8 @@ router.post('/admin-add-job',adminJwtMiddleware,jobController.addJobController)
 router.get('/all-jobs',jobController.getAllUploadedJobsForAdminController)
 //delete a job bu admin : authorized user
 router.delete('/job/:id/remove',adminJwtMiddleware,jobController.removeJobControllerByAdmin)
+//admin to get all applications applied by the users for a job: get user applications , users submit their resume , so pdfmulterConfig. single is the method and resume is field.
+router.get('/all-applications/admin',adminJwtMiddleware,applicationController.getApplicationController)
 
 
 module.exports = router
