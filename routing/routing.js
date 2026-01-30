@@ -47,6 +47,9 @@ router.put('/user-profile/edit',jwtMiddleware,multerConfig.single('profile'),use
 //user applying for a job: add-application, users submit their resume , so pdfmulterConfig. single is the method and resume is field.
 router.post('/user-application/add',jwtMiddleware,pdfmulterConfig.single('resume'),applicationController.addApplicationController)
 
+//user making payment
+router.post('/make-payment',jwtMiddleware,bookController.makeBookPaymentController)
+
 //------------------admin--------------------------------------
 
 // 1) To get all user or user list. But here jwtMiddleware cannot be sued, because not just user or admin, but role has to be checked, so we created adminJwtMiddleware.

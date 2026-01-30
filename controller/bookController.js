@@ -1,5 +1,7 @@
 //import models
 const books = require('../models/bookmodel')
+//payment
+const stripe = require('stripe')('sk_test_51SvCnM2FRWxWdt4UgCIBIYDfJn9nEVtw8kHlcTbNlCgsQFW3APP0RHabXlll4EyN8k1iOGN6F9JBqweF8QLF1MmU002wt6wRUB')
 //users to sell book
 exports.addBookController = async(req,res)=>{
     console.log("Inside Bookcontroller");
@@ -132,6 +134,64 @@ exports.deleteUserUploadedBook = async(req,res)=>{
   
   
 }
+
+//make payment ----user
+exports.makeBookPaymentController = async(req,res)=>{
+  console.log("Inside makeBookPaymentController! ");
+  //Book Details : userMail is the seller who has sold the book
+  const{_id,title,author,noOfPages,imageUrl,Price,discountPrice,abstract,publisher,language,isbn,uploadImg,category,userMail}=req.body
+  //payload from jwtmiddleware
+  const email = req.payload
+  try{
+    //order same as schema,bought is the logged in person who needs to buy the product. userMail:mail of the person who sold the book.
+    const updateBookDetails = await books.findByIdAndUpdate({_id},{title,author,noOfPages,imageUrl,Price,discountPrice,abstract,publisher,language,isbn,category,uploadImg,status:'sold',userMail,bought:email},{new:true})
+    console.log(updateBookDetails);
+    //stripe checkout sessions : array of objects
+    const line_items = [{
+      //price_data is also object
+      price_data:{
+              currency:'usd',
+              //object
+              product_data:{
+                //string
+                name:title,
+                description: `${author} | ${publisher}`,
+                //array
+              images:uploadImg,
+              //additional information , uploadImg not needed.
+              metadata:{
+                title,author,noOfPages,imageUrl,Price,discountPrice,abstract,publisher,language,isbn,category,status:'sold',userMail,bought:email
+              },
+              },
+              
+              //cent, usd so 1D = 100.
+              unit_amount:Math.round(discountPrice*100)
+
+      },
+      //only 1 book available
+      quantity:1
+
+    }]
+    //checkout session creation code from stripe website
+    const session = await stripe.checkout.sessions.create({
+         //array
+      payment_method_types:["card"],
+          //key and value are same
+          line_items,
+          mode: 'payment',
+          //url which we must see in frontend when payment is successful!.
+          success_url: 'http://localhost:5173/payment-success',
+          //cancel_url or if error url
+          cancel_url : 'http://localhost:5173/payment-error'
+            });
+            console.log(session) 
+             res.status(200).json("Response Received!!")    
+  }catch(err){
+    res.status(500).json(err)
+  }
+
+}
+
 
 //-------admin-----------
 
