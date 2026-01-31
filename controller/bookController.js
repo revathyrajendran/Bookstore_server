@@ -185,7 +185,7 @@ exports.makeBookPaymentController = async(req,res)=>{
           cancel_url : 'http://localhost:5173/payment-error'
             });
             console.log(session) 
-             res.status(200).json("Response Received!!")    
+             res.status(200).json({checkoutSessionURL:session.url}) 
   }catch(err){
     res.status(500).json(err)
   }
