@@ -1,4 +1,4 @@
-const jobs = require('../../Bookstore-server/models/jobModel')
+const jobs = require('../models/jobModel')
 
 //add job
 exports.addJobController = async(req,res)=>{
