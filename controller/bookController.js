@@ -179,10 +179,15 @@ exports.makeBookPaymentController = async(req,res)=>{
           //key and value are same
           line_items,
           mode: 'payment',
+          
+          //https://bookstore-frontend-neon.vercel.app
+          // success_url: 'http://localhost:5173/payment-success'
+          //cancel_url : 'http://localhost:5173/payment-error'
+
           //url which we must see in frontend when payment is successful!.
-          success_url: 'http://localhost:5173/payment-success',
+          success_url: 'https://bookstore-frontend-neon.vercel.app/payment-success',
           //cancel_url or if error url
-          cancel_url : 'http://localhost:5173/payment-error'
+          cancel_url : 'https://bookstore-frontend-neon.vercel.app/payment-error'
             });
             console.log(session) 
              res.status(200).json({checkoutSessionURL:session.url}) 
